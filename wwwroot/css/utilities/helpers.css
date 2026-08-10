@@ -1,0 +1,21 @@
+.text-end {
+  text-align: end;
+}
+
+.table-responsive::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(105, 115, 134, 0.35);
+}
+
+@media (max-width: 640px) {
+  .button {
+    width: 100%;
+  }
+}

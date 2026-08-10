@@ -1,0 +1,82 @@
+@model AdminListViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Cadastro</span>
+        <h1>@Model.Title</h1>
+    </div>
+    <a class="button button-primary" asp-controller="@Model.ControllerName" asp-action="Create">
+        <i class="fa-solid fa-plus"></i>
+        <span>Novo</span>
+    </a>
+</section>
+
+<section class="toolbar">
+    <form method="get" class="search-form">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" name="search" value="@Model.SearchTerm" placeholder="@Model.SearchPlaceholder" />
+        <button class="button button-secondary" type="submit">Buscar</button>
+        @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+        {
+            <a class="button button-ghost" asp-controller="@Model.ControllerName" asp-action="Index">Limpar</a>
+        }
+    </form>
+</section>
+
+<section class="table-shell">
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        @foreach (var column in Model.Columns)
+                        {
+                            <th>@column.Header</th>
+                        }
+                        <th class="actions-column">Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        var id = AdminViewHelpers.GetRawValue(item, "Id");
+                        <tr>
+                            @foreach (var column in Model.Columns)
+                            {
+                                var value = AdminViewHelpers.GetDisplayValue(item, column.PropertyPath, column.Format);
+                                <td>
+                                    @if (column.Format == AdminDisplayFormat.Status)
+                                    {
+                                        <span class="@AdminViewHelpers.GetBadgeClass(value)">@value</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="table-cell-text" title="@value">@value</span>
+                                    }
+                                </td>
+                            }
+                            <td class="row-actions">
+                                <a class="icon-button" title="Detalhes" asp-controller="@Model.ControllerName" asp-action="Details" asp-route-id="@id"><i class="fa-solid fa-eye"></i></a>
+                                <a class="icon-button" title="Editar" asp-controller="@Model.ControllerName" asp-action="Edit" asp-route-id="@id"><i class="fa-solid fa-pen"></i></a>
+                                <a class="icon-button danger" title="Excluir ou inativar" asp-controller="@Model.ControllerName" asp-action="Delete" asp-route-id="@id"><i class="fa-solid fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-folder-open"></i>
+            <h2>Nenhum registro encontrado</h2>
+            <a class="button button-primary" asp-controller="@Model.ControllerName" asp-action="Create">Cadastrar @Model.EntityName.ToLowerInvariant()</a>
+        </div>
+    }
+</section>

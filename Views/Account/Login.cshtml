@@ -1,0 +1,90 @@
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section class="login-shell">
+    <aside class="login-hero" aria-label="ScholarWeb">
+        <div class="login-hero-content">
+            <div class="login-brand">
+                <span class="auth-mark"><i class="fa-solid fa-graduation-cap"></i></span>
+                <div>
+                    <strong>ScholarWeb</strong>
+                    <span>Sistema Acadêmico</span>
+                </div>
+            </div>
+
+            <div class="login-copy">
+                <h1>Gestão acadêmica completa e eficiente</h1>
+                <p>Gerencie alunos, professores, cursos e muito mais em um só lugar.</p>
+            </div>
+        </div>
+
+        <div class="academic-line-art" aria-hidden="true"></div>
+    </aside>
+
+    <div class="login-panel">
+        <div class="login-card-stack">
+            <section class="auth-card" aria-labelledby="login-title">
+                <div class="auth-brand">
+                    <span class="auth-mark"><i class="fa-solid fa-graduation-cap"></i></span>
+                    <div>
+                        <strong>ScholarWeb</strong>
+                        <span>Acesso administrativo</span>
+                    </div>
+                </div>
+
+                <form asp-action="Login" method="post" class="auth-form">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                    <div>
+                        <h1 id="login-title">Bem-vindo de volta!</h1>
+                        <p>Faça login para continuar acessando o sistema.</p>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="Email"></label>
+                        <div class="auth-input">
+                            <i class="fa-regular fa-user" aria-hidden="true"></i>
+                            <input asp-for="Email" class="form-control" autocomplete="username" placeholder="admin@scholarweb.local" />
+                        </div>
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="Password">Senha</label>
+                        <div class="auth-input">
+                            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                            <input asp-for="Password" class="form-control" autocomplete="current-password" placeholder="Digite sua senha" id="loginPassword" />
+                            <button type="button" class="password-toggle" data-password-toggle="loginPassword" aria-label="Mostrar senha">
+                                <i class="fa-regular fa-eye-slash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="auth-options">
+                        <label class="remember-option" asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
+                            <span>Lembrar de mim</span>
+                        </label>
+                        <a class="forgot-link" href="mailto:suporte@scholarweb.local">Esqueceu sua senha?</a>
+                    </div>
+
+                    <button type="submit" class="button button-primary button-full login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Entrar</span>
+                    </button>
+                </form>
+            </section>
+
+            <p class="auth-footer">© 2026 ScholarWeb. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
