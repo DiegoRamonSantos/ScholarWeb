@@ -1,7 +1,20 @@
+@using System.Security.Claims
 @using ScholarWeb.Models
 @{
     var isAuthenticated = User.Identity?.IsAuthenticated == true;
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    var currentRole =
+        User.IsInRole(AppRoles.Admin) ? AppRoles.Admin :
+        User.IsInRole(AppRoles.Aluno) ? AppRoles.Aluno :
+        User.IsInRole(AppRoles.Professor) ? AppRoles.Professor :
+        User.FindFirst(ClaimTypes.Role)?.Value ?? "Usuario";
+    var currentRoleIcon = currentRole switch
+    {
+        AppRoles.Admin => "fa-user-shield",
+        AppRoles.Aluno => "fa-user-graduate",
+        AppRoles.Professor => "fa-chalkboard-user",
+        _ => "fa-user"
+    };
     string NavClass(string controller) => string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) ? "nav-link active" : "nav-link";
 }
 <!DOCTYPE html>
@@ -40,6 +53,16 @@
                     <a class="@NavClass("Financeiro")" asp-controller="Financeiro" asp-action="Index"><i class="fa-solid fa-file-invoice-dollar"></i><span>Financeiro</span></a>
                     <a class="@NavClass("PeriodosLetivos")" asp-controller="PeriodosLetivos" asp-action="Index"><i class="fa-solid fa-calendar-days"></i><span>Periodos</span></a>
                 </nav>
+
+                <div class="sidebar-footer" aria-label="Usuario logado">
+                    <div class="logged-user">
+                        <span class="logged-user-icon"><i class="fa-solid @currentRoleIcon"></i></span>
+                        <div class="logged-user-info">
+                            <span>Logado como</span>
+                            <strong>@currentRole</strong>
+                        </div>
+                    </div>
+                </div>
             </aside>
 
             <div class="app-content">

@@ -49,6 +49,54 @@
   gap: 5px;
 }
 
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 6px 0;
+}
+
+.logged-user {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.logged-user-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.logged-user-info {
+  display: grid;
+  min-width: 0;
+}
+
+.logged-user-info span {
+  color: var(--sidebar-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.logged-user-info strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .nav-link {
   display: flex;
   min-height: 42px;
