@@ -1,0 +1,191 @@
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+    var today = DateTime.Today;
+}
+
+<section class="page-header dashboard-header">
+    <div>
+        <h1>Dashboard</h1>
+        <span class="dashboard-date">@today.ToString("dddd, d 'de' MMMM 'de' yyyy", culture)</span>
+    </div>
+</section>
+
+<section class="dashboard-grid" aria-label="Indicadores principais">
+    <article class="metric-card metric-card-accent">
+        <div class="metric-card-content">
+            <span>Alunos Ativos</span>
+            <strong>@Model.TotalAlunos</strong>
+            <small>@Model.TotalAlunos total</small>
+        </div>
+        <span class="metric-icon">
+            <i class="fa-solid fa-user-graduate"></i>
+        </span>
+    </article>
+    <article class="metric-card metric-card-purple">
+        <div class="metric-card-content">
+            <span>Professores</span>
+            <strong>@Model.TotalProfessores</strong>
+            <small>@Model.TotalProfessores total</small>
+        </div>
+        <span class="metric-icon">
+            <i class="fa-solid fa-chalkboard-user"></i>
+        </span>
+    </article>
+    <article class="metric-card metric-card-warning">
+        <div class="metric-card-content">
+            <span>Cursos Ativos</span>
+            <strong>@Model.TotalCursos</strong>
+            <small>@Model.TotalCursos total</small>
+        </div>
+        <span class="metric-icon">
+            <i class="fa-solid fa-book-open"></i>
+        </span>
+    </article>
+    <article class="metric-card metric-card-teal">
+        <div class="metric-card-content">
+            <span>Turmas Ativas</span>
+            <strong>@Model.TotalTurmas</strong>
+            <small>@Model.TotalTurmas total</small>
+        </div>
+        <span class="metric-icon">
+            <i class="fa-solid fa-building-columns"></i>
+        </span>
+    </article>
+</section>
+
+<section class="dashboard-main">
+    <article class="panel dashboard-finance-panel">
+        <header class="panel-header">
+            <h2>Resumo Financeiro</h2>
+            <a asp-controller="Financeiro" asp-action="Index">
+                <span>Ver detalhes</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </header>
+        <div class="finance-summary">
+            <div class="finance-tile finance-tile-success">
+                <span class="finance-label">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    Recebido
+                </span>
+                <strong>@Model.ReceitaRecebida.ToString("C", culture)</strong>
+                <small>@Model.PagamentosRecebidos @(Model.PagamentosRecebidos == 1 ? "pagamento" : "pagamentos")</small>
+            </div>
+            <div class="finance-tile finance-tile-danger">
+                <span class="finance-label">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    Pendente
+                </span>
+                <strong>@Model.ReceitaPendente.ToString("C", culture)</strong>
+                <small>@Model.PagamentosPendentes @(Model.PagamentosPendentes == 1 ? "pendencia" : "pendencias")</small>
+                @if (Model.FinanceirosAtrasados > 0)
+                {
+                    <span class="finance-alert">@Model.FinanceirosAtrasados em atraso</span>
+                }
+            </div>
+        </div>
+    </article>
+
+    <article class="panel dashboard-actions-panel">
+        <header class="panel-header">
+            <h2>Acesso Rapido</h2>
+        </header>
+        <div class="quick-actions">
+            <a class="quick-action quick-action-accent" asp-controller="Alunos" asp-action="Create">
+                <span><i class="fa-solid fa-user-graduate"></i></span>
+                <strong>Novo Aluno</strong>
+            </a>
+            <a class="quick-action quick-action-purple" asp-controller="Professores" asp-action="Create">
+                <span><i class="fa-solid fa-chalkboard-user"></i></span>
+                <strong>Novo Professor</strong>
+            </a>
+            <a class="quick-action quick-action-warning" asp-controller="Turmas" asp-action="Create">
+                <span><i class="fa-solid fa-building-columns"></i></span>
+                <strong>Nova Turma</strong>
+            </a>
+            <a class="quick-action quick-action-teal" asp-controller="Notas" asp-action="Create">
+                <span><i class="fa-solid fa-clipboard-check"></i></span>
+                <strong>Lancar Notas</strong>
+            </a>
+        </div>
+    </article>
+</section>
+
+<section class="table-shell dashboard-students-panel">
+    <header class="dashboard-table-header">
+        <h2>Ultimos Alunos Cadastrados</h2>
+        <a asp-controller="Alunos" asp-action="Index">
+            <span>Ver todos</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </header>
+
+    @if (Model.UltimosAlunosCadastrados.Any())
+    {
+        <div class="table-responsive">
+            <table class="admin-table dashboard-students-table">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>CPF</th>
+                        <th>Localidade</th>
+                        <th>Cadastro</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.UltimosAlunosCadastrados)
+                    {
+                        var firstLetter = string.IsNullOrWhiteSpace(item.NomeCompleto)
+                            ? "?"
+                            : item.NomeCompleto.Trim()[0].ToString().ToUpper(culture);
+                        var localidade = item.Cidade;
+
+                        if (!string.IsNullOrWhiteSpace(item.Estado))
+                        {
+                            localidade = string.IsNullOrWhiteSpace(localidade)
+                                ? item.Estado
+                                : $"{localidade} / {item.Estado}";
+                        }
+
+                        localidade = string.IsNullOrWhiteSpace(localidade) ? "-" : localidade;
+                        var statusText = AdminViewHelpers.GetEnumDisplayName(item.Status);
+
+                        <tr>
+                            <td>
+                                <div class="student-cell">
+                                    <span class="student-avatar">@firstLetter</span>
+                                    <span class="student-info">
+                                        <strong title="@item.NomeCompleto">@item.NomeCompleto</strong>
+                                        <small title="@item.Email">@item.Email</small>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="table-cell-text" title="@item.CPF">@item.CPF</span>
+                            </td>
+                            <td>
+                                <span class="table-cell-text" title="@localidade">@localidade</span>
+                            </td>
+                            <td>@item.DataCadastro.ToString("dd/MM/yyyy", culture)</td>
+                            <td>
+                                <span class="@AdminViewHelpers.GetBadgeClass(statusText)">@statusText</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state dashboard-empty">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h2>Nenhum aluno cadastrado</h2>
+            <a class="button button-primary" asp-controller="Alunos" asp-action="Create">Cadastrar aluno</a>
+        </div>
+    }
+</section>

@@ -1,0 +1,99 @@
+@model AdminFormPageViewModel
+
+<form asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-id="@Model.Id" method="post" class="panel form-panel">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+    <div class="form-grid">
+        @foreach (var field in Model.Fields)
+        {
+            var hasState = ViewData.ModelState.TryGetValue(field.Name, out var fieldState);
+            var value = hasState && fieldState?.AttemptedValue is not null
+                ? fieldState.AttemptedValue
+                : AdminViewHelpers.GetInputValue(Model.Entity, field);
+            var hasError = hasState && fieldState?.Errors.Count > 0;
+            var fieldClass = field.FieldType == AdminFieldType.TextArea ? "form-field span-2" : "form-field";
+
+            <div class="@fieldClass">
+                <label for="@field.Name">
+                    @field.Label
+                    @if (field.IsRequired)
+                    {
+                        <span>*</span>
+                    }
+                </label>
+
+                @if (field.FieldType == AdminFieldType.Select)
+                {
+                    <select id="@field.Name" name="@field.Name" class="form-select @(hasError ? "is-invalid" : string.Empty)" required="@field.IsRequired" disabled="@field.IsReadOnly">
+                        <option value="">Selecione</option>
+                        @foreach (var option in field.Options)
+                        {
+                            <option value="@option.Value" selected="@(option.Value == value ? "selected" : null)">@option.Text</option>
+                        }
+                    </select>
+                }
+                else if (field.FieldType == AdminFieldType.TextArea)
+                {
+                    <textarea id="@field.Name"
+                              name="@field.Name"
+                              rows="@field.Rows"
+                              class="form-control @(hasError ? "is-invalid" : string.Empty)"
+                              placeholder="@field.Placeholder"
+                              maxlength="@field.MaxLength"
+                              required="@field.IsRequired"
+                              readonly="@field.IsReadOnly">@value</textarea>
+                }
+                else
+                {
+                    var inputType = field.FieldType switch
+                    {
+                        AdminFieldType.Email => "email",
+                        AdminFieldType.Phone => "tel",
+                        AdminFieldType.Number => "number",
+                        AdminFieldType.Decimal => "number",
+                        AdminFieldType.Date => "date",
+                        _ => "text"
+                    };
+
+                    <input id="@field.Name"
+                           name="@field.Name"
+                           type="@inputType"
+                           value="@value"
+                           class="form-control @(hasError ? "is-invalid" : string.Empty)"
+                           placeholder="@field.Placeholder"
+                           min="@field.Min"
+                           max="@field.Max"
+                           step="@field.Step"
+                           maxlength="@field.MaxLength"
+                           pattern="@field.Pattern"
+                           title="@field.PatternMessage"
+                           inputmode="@field.InputMode"
+                           required="@field.IsRequired"
+                           readonly="@field.IsReadOnly" />
+                }
+
+                @if (!string.IsNullOrWhiteSpace(field.HelpText))
+                {
+                    <small>@field.HelpText</small>
+                }
+
+                @if (hasError && fieldState is not null)
+                {
+                    foreach (var error in fieldState.Errors)
+                    {
+                        <span class="field-validation-error">@error.ErrorMessage</span>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    <div class="form-actions">
+        <a class="button button-ghost" asp-controller="@Model.ControllerName" asp-action="Index">Cancelar</a>
+        <button class="button button-primary" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Salvar</span>
+        </button>
+    </div>
+</form>

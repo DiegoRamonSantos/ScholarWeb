@@ -1,0 +1,18 @@
+@model AdminFormPageViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Edicao</span>
+        <h1>@Model.Title</h1>
+    </div>
+</section>
+
+<partial name="~/Views/Shared/AdminCrud/_Form.cshtml" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

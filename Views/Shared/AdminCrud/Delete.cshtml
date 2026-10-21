@@ -1,0 +1,61 @@
+@model AdminDeleteViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Confirmacao</span>
+        <h1>@Model.Title</h1>
+    </div>
+</section>
+
+<section class="panel details-panel">
+    <div class="delete-warning">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>@Model.WarningMessage</span>
+    </div>
+
+    <dl class="details-grid">
+        @foreach (var field in Model.Fields)
+        {
+            var value = AdminViewHelpers.GetDisplayValue(Model.Entity, field.PropertyPath, field.Format);
+            <div>
+                <dt>@field.Label</dt>
+                <dd>
+                    @if (field.Format == AdminDisplayFormat.Status)
+                    {
+                        <span class="@AdminViewHelpers.GetBadgeClass(value)">@value</span>
+                    }
+                    else
+                    {
+                        @value
+                    }
+                </dd>
+            </div>
+        }
+    </dl>
+
+    <div class="form-actions">
+        <a class="button button-ghost" asp-controller="@Model.ControllerName" asp-action="Index">Cancelar</a>
+        @if (Model.CanDelete)
+        {
+            <form asp-controller="@Model.ControllerName" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                <button class="button button-danger" type="submit">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Excluir</span>
+                </button>
+            </form>
+        }
+        else if (Model.CanInactivate)
+        {
+            <form asp-controller="@Model.ControllerName" asp-action="Inactivate" asp-route-id="@Model.Id" method="post">
+                <button class="button button-warning" type="submit">
+                    <i class="fa-solid fa-ban"></i>
+                    <span>Inativar</span>
+                </button>
+            </form>
+        }
+    </div>
+</section>
