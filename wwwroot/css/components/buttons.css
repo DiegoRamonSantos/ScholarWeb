@@ -1,0 +1,71 @@
+.button,
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.button {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.button-full {
+  width: 100%;
+}
+
+.button-primary {
+  color: #ffffff;
+  background: var(--primary);
+}
+
+.button-primary:hover {
+  color: #ffffff;
+  background: var(--primary-strong);
+}
+
+.button-secondary {
+  color: var(--primary-strong);
+  border-color: var(--primary-soft);
+  background: var(--primary-soft);
+}
+
+.button-ghost {
+  color: var(--text);
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.button-danger {
+  color: #ffffff;
+  background: var(--danger);
+}
+
+.button-warning {
+  color: #3c2b05;
+  background: #f6c85f;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--text);
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.icon-button:hover {
+  background: var(--surface-muted);
+}
+
+.icon-button.danger {
+  color: var(--danger);
+}

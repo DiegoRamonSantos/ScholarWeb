@@ -1,0 +1,17 @@
+global using Aluno = ScholarWeb.Models.Student;
+global using Professor = ScholarWeb.Models.Teacher;
+global using Curso = ScholarWeb.Models.Course;
+global using Turma = ScholarWeb.Models.ClassGroup;
+global using Disciplina = ScholarWeb.Models.Subject;
+global using Matricula = ScholarWeb.Models.Enrollment;
+global using Nota = ScholarWeb.Models.Grade;
+global using LancamentoFinanceiro = ScholarWeb.Models.FinancialEntry;
+global using PeriodoLetivo = ScholarWeb.Models.AcademicTerm;
+global using StatusRegistro = ScholarWeb.Models.RecordStatus;
+global using StatusTurma = ScholarWeb.Models.ClassGroupStatus;
+global using StatusPeriodoLetivo = ScholarWeb.Models.AcademicTermStatus;
+global using StatusMatricula = ScholarWeb.Models.EnrollmentStatus;
+global using SituacaoNota = ScholarWeb.Models.GradeStatus;
+global using TipoLancamento = ScholarWeb.Models.FinancialEntryType;
+global using StatusFinanceiro = ScholarWeb.Models.FinancialStatus;
+global using Turno = ScholarWeb.Models.Shift;
